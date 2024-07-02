@@ -1,0 +1,48 @@
+import 'dart:developer';
+import 'package:get/get.dart';
+import 'package:grocery_app/data/services/api_checker.dart';
+import 'package:grocery_app/models/banner_model.dart';
+import 'package:grocery_app/module/home/banner/repository/banner_repo.dart';
+
+class BannerController extends GetxController implements GetxService {
+  final BannerRepo bannerRepo;
+  BannerController({required this.bannerRepo});
+
+  List<BannerModel> bannerList = [];
+  bool _isSafeArea = false;
+  bool get isSafeArea => _isSafeArea;
+  // BannerModel bannerModel;
+
+  Future<void> getBannerList() async {
+    bannerList = [];
+    Response response = await bannerRepo.getBannerList();
+    log('Banner response: ${response.body}');
+    if (response.statusCode == 200) {
+      response.body.forEach((banner) {
+        BannerModel bannerModel = BannerModel.fromJson(banner);
+        if (bannerModel.bannerType == 'main') {
+          bannerList.add(bannerModel);
+        }
+      });
+    } else {
+      ApiChecker.checkApi(response);
+    }
+    update();
+  }
+
+  void setSafeAreaTrue() {
+    _isSafeArea = true;
+    update();
+  }
+
+  void setSafeAreaFalse() {
+    _isSafeArea = false;
+    update();
+  }
+
+  int currentIndex = 0;
+  updateIndicatorIndex(index, reason) {
+    currentIndex = index;
+    update();
+  }
+}
