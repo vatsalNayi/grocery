@@ -104,121 +104,142 @@ class HomePage extends StatelessWidget {
                 SizedBox(height: 14.h),
                 GetBuilder<CategoryController>(
                   builder: (categoryController) {
-                    return categoryController.categoryList != null &&
-                            categoryController.categoryList!.isNotEmpty
-                        ? SizedBox(
-                            height: 300.h,
-                            child: GridView.builder(
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              padding: EdgeInsets.symmetric(horizontal: 24.w),
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 8.w,
-                                mainAxisSpacing: 20.h,
-                                // childAspectRatio: 0.7, // Gridview's item's size
-                              ),
-                              itemCount:
-                                  categoryController.categoryList!.length,
-                              itemBuilder: (context, index) {
-                                final categoryList =
-                                    categoryController.categoryList![index];
-                                return GestureDetector(
-                                  onTap: () {
-                                    Get.toNamed(
-                                      Routes.getCategoryProductRoute(
-                                        categoryList,
+                    return
+                        // categoryController.getCatLoading
+                        //     ? const Center(
+                        //         child: Padding(
+                        //           padding: EdgeInsets.only(top: 10.0),
+                        //           child: CupertinoActivityIndicator(),
+                        //         ),
+                        //       ) :
+                        categoryController.categoryList != null &&
+                                categoryController.categoryList!.isNotEmpty
+                            ? SizedBox(
+                                height: 300.h,
+                                child: GridView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  shrinkWrap: true,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 24.w),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 8.w,
+                                    mainAxisSpacing: 20.h,
+                                    // childAspectRatio: 0.7, // Gridview's item's size
+                                  ),
+                                  itemCount:
+                                      categoryController.categoryList!.length,
+                                  itemBuilder: (context, index) {
+                                    final categoryList =
+                                        categoryController.categoryList![index];
+                                    return GestureDetector(
+                                      onTap: () {
+                                        Get.toNamed(
+                                          Routes.getCategoryProductRoute(
+                                            categoryList,
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        color: AppColors.categoryBg,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Image.network(
+                                              categoryList.image!.src
+                                                  .toString(),
+                                              height: 80.h,
+                                              width: 80.w,
+                                            ),
+                                            SizedBox(height: 20.h),
+                                            Text(
+                                              '${categoryList.name}',
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 14.sp,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     );
                                   },
-                                  child: Container(
-                                    color: AppColors.categoryBg,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Image.network(
-                                          categoryList.image!.src.toString(),
-                                          height: 80.h,
-                                          width: 80.w,
-                                        ),
-                                        SizedBox(height: 20.h),
-                                        Text(
-                                          '${categoryList.name}',
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 14.sp,
-                                            fontWeight: FontWeight.w400,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          )
-                        : const SizedBox();
+                                ),
+                              )
+                            : const SizedBox();
                   },
                 ),
                 SizedBox(height: 17.h),
                 GetBuilder<BannerController>(
                   builder: (bannerController) {
                     final bannerList = bannerController.bannerList;
-                    return bannerList.isEmpty
-                        ? const SizedBox()
-                        : SizedBox(
-                            height: 170.h,
-                            child: PageView.builder(
-                              itemCount: bannerList.length,
-                              onPageChanged: controller.onPageChanged,
-                              itemBuilder: (context, index) {
-                                final banner = bannerList[index];
-                                return GestureDetector(
-                                  onTap: () {
-                                    if (banner.resourceType == 'product' &&
-                                        banner.product != null) {
-                                      Get.toNamed(Routes.getProductDetailsRoute(
-                                          banner.product, null, false));
-                                    } else if (banner.resourceType ==
-                                            'category' &&
-                                        banner.category != null) {
-                                      Get.toNamed(
-                                        Routes.getCategoryProductRoute(
-                                          CategoryModel(id: banner.category),
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  child: Container(
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 24.w),
-                                    // padding: EdgeInsets.symmetric(
-                                    //   horizontal: 10.w,
-                                    //   vertical: 20.h,
-                                    // ),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.categoryBg,
-                                      borderRadius: BorderRadius.circular(25.r),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(25.r),
-                                      child: Image.network(
-                                        '${bannerList[index].image}',
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    // child: Image.network(
-                                    //   '${bannerList[index].image}',
-                                    //   // height: 99.h,
-                                    //   // width: 183.w,
-                                    //   fit: BoxFit.contain,
-                                    // ),
-                                  ),
-                                );
-                              },
+                    return bannerController.getBannerLoading
+                        ? const Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 12.0),
+                              child: CupertinoActivityIndicator(),
                             ),
-                          );
+                          )
+                        : bannerList.isEmpty
+                            ? const SizedBox()
+                            : SizedBox(
+                                height: 170.h,
+                                child: PageView.builder(
+                                  itemCount: bannerList.length,
+                                  onPageChanged: controller.onPageChanged,
+                                  itemBuilder: (context, index) {
+                                    final banner = bannerList[index];
+                                    return GestureDetector(
+                                      onTap: () {
+                                        if (banner.resourceType == 'product' &&
+                                            banner.product != null) {
+                                          Get.toNamed(
+                                              Routes.getProductDetailsRoute(
+                                                  banner.product, null, false));
+                                        } else if (banner.resourceType ==
+                                                'category' &&
+                                            banner.category != null) {
+                                          Get.toNamed(
+                                            Routes.getCategoryProductRoute(
+                                              CategoryModel(
+                                                  id: banner.category),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      child: Container(
+                                        margin: EdgeInsets.symmetric(
+                                            horizontal: 24.w),
+                                        // padding: EdgeInsets.symmetric(
+                                        //   horizontal: 10.w,
+                                        //   vertical: 20.h,
+                                        // ),
+                                        decoration: BoxDecoration(
+                                          color: AppColors.categoryBg,
+                                          borderRadius:
+                                              BorderRadius.circular(25.r),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(25.r),
+                                          child: Image.network(
+                                            '${bannerList[index].image}',
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                        // child: Image.network(
+                                        //   '${bannerList[index].image}',
+                                        //   // height: 99.h,
+                                        //   // width: 183.w,
+                                        //   fit: BoxFit.contain,
+                                        // ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
                   },
                 ),
                 const SizedBox(height: 20.0),
@@ -282,11 +303,10 @@ class HomePage extends StatelessWidget {
                 GetBuilder<ProductController>(
                   builder: (productController) {
                     final productList = productController.productList;
-                    return productController.productList == null
-                        ? const SizedBox()
-                        : productController.isLoading
-                            ? const Center(child: CupertinoActivityIndicator())
-                            : GridView.builder(
+                    return productController.isLoading
+                        ? const Center(child: CupertinoActivityIndicator())
+                        : productController.productList != null
+                            ? GridView.builder(
                                 padding: EdgeInsets.symmetric(horizontal: 24.w),
                                 itemCount: productList!.length,
                                 physics: const NeverScrollableScrollPhysics(),
@@ -314,7 +334,8 @@ class HomePage extends StatelessWidget {
                                     ),
                                   );
                                 },
-                              );
+                              )
+                            : const SizedBox();
                   },
                 ),
                 SizedBox(height: 40.h),

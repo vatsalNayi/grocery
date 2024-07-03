@@ -46,7 +46,12 @@ class CategoryController extends GetxController implements GetxService {
 
   int selectedParentCategory = -1;
 
+  bool _isCatLoading = false;
+  bool get getCatLoading => _isCatLoading;
+  set setCatLoading(val) => _isCatLoading = val;
+
   Future<void> getCategoryList(bool reload, int offset) async {
+    setCatLoading = true;
     if (reload) {
       _categoryList = null;
       update();
@@ -54,6 +59,7 @@ class CategoryController extends GetxController implements GetxService {
     // Get.dialog(const CustomLoader(), barrierDismissible: false);
     Response response = await categoryRepo.getCategoryList(offset);
     if (response.statusCode == 200) {
+      setCatLoading = false;
       if (offset == 1) {
         _categoryList = [];
       }
@@ -65,6 +71,7 @@ class CategoryController extends GetxController implements GetxService {
 
       // Get.back();
     } else {
+      setCatLoading = false;
       // Get.back();
       ApiChecker.checkApi(response);
     }
