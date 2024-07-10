@@ -74,7 +74,7 @@ class _ProductShimmerState extends State<ProductShimmer> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   SizedBox(
-                                    width: 110,
+                                    width: 108,
                                     child: Text(
                                       '',
                                       textAlign: TextAlign.left,
@@ -82,7 +82,6 @@ class _ProductShimmerState extends State<ProductShimmer> {
                                         color: AppColors.black,
                                         fontSize: 15,
                                         fontWeight: FontWeight.w700,
-                                        // height: 0.04,
                                       ),
                                       overflow: TextOverflow.ellipsis,
                                     ),
